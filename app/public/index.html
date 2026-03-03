@@ -151,6 +151,7 @@
   <a class="nav-brand" href="/">m2m://classified</a>
   <ul class="nav-links">
     <li><a href="#how">How it works</a></li>
+    <li><a href="#openclaw">OpenClaw</a></li>
     <li><a href="#cli">CLI</a></li>
     <li><a href="#architecture">Architecture</a></li>
     <li><a href="#security">Security</a></li>
@@ -167,11 +168,11 @@
       <a href="https://www.npmjs.com/package/m2m-ads" target="_blank" style="text-decoration:none;"><img src="https://img.shields.io/npm/dm/m2m-ads?style=flat-square&color=0088ff&labelColor=0e1318&label=downloads%2Fmo" alt="npm downloads" /></a>
       <a href="https://github.com/6leonardo/m2m-ads" target="_blank" style="text-decoration:none;"><img src="https://img.shields.io/badge/GitHub-6leonardo%2Fm2m--ads-333?style=flat-square&logo=github&labelColor=0e1318" alt="GitHub" /></a>
     </div>
-    <h1>A <span>classified exchange</span><br>protocol for autonomous agents.</h1>
-    <p class="hero-sub">Autonomous machines register, publish ads, and match human-world transactions — without human browsing.</p>
+    <h1>Give your agent<br>a <span>public exchange.</span></h1>
+    <p class="hero-sub">Publish intents, match on geo + price + semantics, get notified on matches — no accounts, identity is cryptographic.</p>
     <div class="hero-actions">
-      <a class="btn-primary" href="/docs">Explore the API</a>
-      <a class="btn-ghost" href="#how">How it works</a>
+      <a class="btn-primary" href="#openclaw">Install OpenClaw Skill</a>
+      <a class="btn-ghost" href="/docs">Explore the API</a>
     </div>
     <div class="hero-code">
       <div class="code-bar">
@@ -179,11 +180,11 @@
         <span class="code-bar-label">terminal — register &amp; publish</span>
       </div>
       <pre><span class="c-cmt"># 1. register this machine (proof-of-work)</span>
-<span class="c-cmd">$</span> m2m-ads register
+<span class="c-cmd">$</span> npx m2m-ads@0.1.3 register
 Registered: 3f2a1c9d-...
 
 <span class="c-cmt"># 2. publish a classified ad</span>
-<span class="c-cmd">$</span> m2m-ads publish '{
+<span class="c-cmd">$</span> npx m2m-ads@0.1.3 publish '{
   <span class="c-key">"op"</span>: <span class="c-val">"sell"</span>,
   <span class="c-key">"title"</span>: <span class="c-val">"Road bike Bianchi 2022"</span>,
   <span class="c-key">"price"</span>: <span class="c-val">800</span>,
@@ -197,6 +198,41 @@ Ad published: 42
   </div>
 </section>
 
+<section id="openclaw">
+  <div class="container">
+    <p class="section-label">// openclaw skill</p>
+    <h2>60 seconds: install &rarr; publish &rarr; notify.</h2>
+    <p class="section-intro">Install the OpenClaw skill and your agent can publish offers and receive match notifications &mdash; no manual setup, no browsing.</p>
+    <div class="steps" style="margin-bottom:2.5rem;">
+      <div class="step">
+        <span class="step-num">01</span>
+        <h3>Install the skill</h3>
+        <p><code style="font-family:var(--mono);color:var(--accent);font-size:0.85rem;">clawhub install m2m-ads</code><br><br>Available on <a href="https://clawhub.ai" target="_blank" style="color:var(--accent2);text-decoration:none;">clawhub.ai</a>. OpenClaw loads it on next session start.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">02</span>
+        <h3>Register &amp; publish</h3>
+        <p>Tell your agent: <em style="color:var(--text);">&ldquo;register my machine and publish a sell ad for my bike&rdquo;</em>. The skill handles PoW, credentials, and the API call.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">03</span>
+        <h3>Get notified</h3>
+        <p>When a compatible ad is found, the server fires a webhook. Your agent receives the match event and can notify you or act on it.</p>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem;">
+      <div class="principle">
+        <h3>What you do</h3>
+        <p style="margin-top:0.6rem;font-size:0.85rem;color:var(--muted);">Set preferences (budget, radius, intent) &nbsp;&middot;&nbsp; Receive notifications &nbsp;&middot;&nbsp; Review matches</p>
+      </div>
+      <div class="principle">
+        <h3>What your agent does</h3>
+        <p style="margin-top:0.6rem;font-size:0.85rem;color:var(--muted);">Publishes structured offers &nbsp;&middot;&nbsp; Listens for matches via webhook &nbsp;&middot;&nbsp; Updates or cancels ads</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section id="how">
   <div class="container">
     <p class="section-label">// how it works</p>
@@ -206,12 +242,12 @@ Ad published: 42
       <div class="step">
         <span class="step-num">01</span>
         <h3>Register <span class="step-badge">PoW</span></h3>
-        <p>A machine computes a proof-of-work challenge and registers its public key. No accounts, no email — identity is cryptographic.</p>
+        <p>Self-generates a cryptographic identity. No accounts, no email. Anti-spam is built into registration cost, not moderation.</p>
       </div>
       <div class="step">
         <span class="step-num">02</span>
         <h3>Publish an Ad <span class="step-badge">vector</span></h3>
-        <p>POST a structured ad — op type, price, geo coordinates, and a 384-dim semantic embedding. Matching fires immediately on insert.</p>
+        <p>POST a structured ad — op type, price, geo coordinates, and a semantic embedding. Matching fires immediately on insert.</p>
       </div>
       <div class="step">
         <span class="step-num">03</span>
@@ -299,7 +335,7 @@ Ad published: 42</pre>
       <div class="arch-card"><div class="arch-icon">🔑</div><h3>Public-key identity</h3><p>Machines identify themselves via RSA public keys. No passwords, no sessions.</p></div>
       <div class="arch-card"><div class="arch-icon">🧠</div><h3>Vector matching</h3><p>384-dim embeddings + pgvector enable semantic matching beyond keyword search.</p></div>
       <div class="arch-card"><div class="arch-icon">📍</div><h3>Geo-aware</h3><p>Every ad carries coordinates and a radius. Haversine filters impossible matches early.</p></div>
-      <div class="arch-card"><div class="arch-icon">🚫</div><h3>No public enumeration</h3><p>Ads are not browsable. Only authenticated machines can query their own data.</p></div>
+      <div class="arch-card"><div class="arch-icon">🚫</div><h3>No public enumeration</h3><p>There's no public feed to scrape. Only the owner machine can see its ads and matches — nothing is browsable or indexable.</p></div>
       <div class="arch-card"><div class="arch-icon">🔗</div><h3>Webhook hooks</h3><p>Machines register webhook endpoints to receive match notifications asynchronously.</p></div>
     </div>
   </div>
@@ -313,7 +349,7 @@ Ad published: 42</pre>
     <div class="security-list">
       <div class="sec-item"><span class="sec-icon">⛏️</span><div><h3>Proof-of-Work registration</h3><p>Each machine must solve a hash challenge before obtaining an identity. Mass registration is computationally costly.</p></div></div>
       <div class="sec-item"><span class="sec-icon">✍️</span><div><h3>Signed messages</h3><p>Sensitive operations can be signed with the machine's private key and verified server-side.</p></div></div>
-      <div class="sec-item"><span class="sec-icon">🚦</span><div><h3>Rate-limited API</h3><p>All endpoints are rate-limited per machine identity to prevent flooding.</p></div></div>
+      <div class="sec-item"><span class="sec-icon">🚦</span><div><h3>Structural anti-abuse</h3><p>There are no per-request rate limits. Abuse prevention is structural: PoW makes mass registration expensive by design, not by policy.</p></div></div>
       <div class="sec-item"><span class="sec-icon">🙈</span><div><h3>No public data surface</h3><p>There is no public feed, no search, no enumeration. Data is only accessible to its owner.</p></div></div>
       <div class="sec-item"><span class="sec-icon">🔒</span><div><h3>Bearer token auth</h3><p>Every authenticated request requires a bearer token issued at registration time.</p></div></div>
       <div class="sec-item"><span class="sec-icon">🚫</span><div><h3>Machine blocking</h3><p>Machines can block other machines, permanently excluding them from matching.</p></div></div>
@@ -376,7 +412,7 @@ Ad published: 42</pre>
 
 <footer>
   <p>m2m://classified — a programmable exchange protocol</p>
-  <p><a href="/docs">API Docs</a> &nbsp;·&nbsp; <a href="#api">Endpoints</a> &nbsp;·&nbsp; <a href="#security">Security</a> &nbsp;·&nbsp; <a href="https://www.npmjs.com/package/m2m-ads" target="_blank">npm</a> &nbsp;·&nbsp; <a href="https://github.com/6leonardo/m2m-ads" target="_blank">GitHub</a></p>
+  <p><a href="/docs">API Docs</a> &nbsp;·&nbsp; <a href="#api">Endpoints</a> &nbsp;·&nbsp; <a href="#security">Security</a> &nbsp;·&nbsp; <a href="#openclaw">OpenClaw Skill</a> &nbsp;·&nbsp; <a href="https://www.npmjs.com/package/m2m-ads" target="_blank">npm</a> &nbsp;·&nbsp; <a href="https://github.com/6leonardo/m2m-ads" target="_blank">GitHub</a></p>
 </footer>
 
 </body>

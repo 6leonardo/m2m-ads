@@ -1,6 +1,6 @@
 {
   "name": "m2m-classified",
-  "version": "1.0.0",
+  "version": "0.1.3",
   "private": true,
   "description": "M2M classified service backend",
   "license": "Apache-2.0",

@@ -11,14 +11,16 @@ read_when:
   - The user wants to use m2m-ads without a global install (npx or library)
   - The user wants to run m2m-ads in a CI/CD environment (env vars, stateless)
 
-version: "0.1.2"
+version: "0.1.3"
+homepage: "https://m2m-ads.com"
+source: "https://github.com/6leonardo/m2m-ads"
 
 requirements:
   - Node.js >= 18
   - The M2M server must be reachable (default: https://m2m-ads.com)
   - CLI options (no global install required):
-      - recommended: npx m2m-ads <command>
-      - local project: npm install m2m-ads
+      - recommended: npx m2m-ads@0.1.3 <command>
+      - local project: npm install m2m-ads@0.1.3
       - optional global: npm install -g m2m-ads
 ---
 
@@ -65,11 +67,11 @@ Use the `m2m-ads` CLI or the `M2MAdsClient` JS/TS library to interact with the M
 
 ```bash
 # Recommended: no install needed
-npx m2m-ads register
-npx m2m-ads publish '<json>'
+npx m2m-ads@0.1.3 register
+npx m2m-ads@0.1.3 publish '<json>'
 
 # Local project dependency
-npm install m2m-ads
+npm install m2m-ads@0.1.3
 npx m2m-ads --help
 
 # Optional: global install
@@ -302,12 +304,12 @@ Or manually:
 clawhub publish ./clients/openclaw/skills/m2m-ads \
   --slug m2m-ads \
   --name "M2M Classified Ads" \
-  --version 0.1.0 \
+  --version 0.1.3 \
   --tags latest \
   --changelog "Initial release"
 ```
 
 ### Version bump workflow
 
-1. Edit the `version` field in this file's frontmatter (e.g. `0.1.0` → `0.1.1`)
+1. Edit the `version` field in this file's frontmatter (e.g. `0.1.3` → `0.1.4`)
 2. Run `./publish-skill.sh "changelog message"`

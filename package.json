@@ -1,0 +1,12 @@
+{
+  "name": "classified-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "M2M classified service — monorepo",
+  "scripts": {
+    "dev": "pnpm --filter app dev",
+    "test": "pnpm --filter app test",
+    "build": "pnpm -r build",
+    "publish:m2m-ads": "pnpm --filter m2m-ads publish"
+  }
+}

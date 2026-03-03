@@ -1,0 +1,1 @@
+export { M2MClient } from './client.js';

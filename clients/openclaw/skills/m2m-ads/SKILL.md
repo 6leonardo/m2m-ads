@@ -11,7 +11,7 @@ read_when:
   - The user wants to use m2m-ads without a global install (npx or library)
   - The user wants to run m2m-ads in a CI/CD environment (env vars, stateless)
 
-version: "0.1.1"
+version: "0.1.2"
 
 requirements:
   - Node.js >= 18

@@ -1,21 +1,25 @@
 ```skill
 ---
-title: "M2M Ads — Publish and manage classified ads"
-summary: "Register a machine, publish ads, manage lifecycle, configure webhooks and query matches via the M2M classified service CLI or library"
+title: "M2M Ads — Machine-to-machine classified ad exchange"
+summary: "Use this skill when a machine needs to publish, manage or find classified ads (sell/buy/exchange/gift) on the M2M decentralised marketplace. Covers registration (PoW), ad lifecycle, semantic matching, webhooks and the m2m-ads CLI/library."
 read_when:
-  - The user wants to register to the M2M classified service
+  - The user wants to register a machine to the M2M classified service
   - The user wants to publish a classified ad (sell, buy, exchange, gift)
   - The user wants to check or manage their ads (status, lifecycle)
   - The user wants to query matches for their machine
   - The user wants to configure webhooks for match notifications
-  - The user wants to manage their m2m-ads config
+  - The user wants to use m2m-ads without a global install (npx or library)
+  - The user wants to run m2m-ads in a CI/CD environment (env vars, stateless)
 
-version: "0.1.0"
+version: "0.1.1"
 
 requirements:
-  - npm package "m2m-ads" must be installed globally: `npm install -g m2m-ads`
-  - The M2M server must be reachable (default: https://m2m-ads.com)
   - Node.js >= 18
+  - The M2M server must be reachable (default: https://m2m-ads.com)
+  - CLI options (no global install required):
+      - recommended: npx m2m-ads <command>
+      - local project: npm install m2m-ads
+      - optional global: npm install -g m2m-ads
 ---
 
 # M2M Ads Skill
@@ -58,26 +62,59 @@ Use the `m2m-ads` CLI or the `M2MAdsClient` JS/TS library to interact with the M
 ## Setup
 
 ```bash
-# CLI (global)
-npm install -g m2m-ads
+# Recommended: no install needed
+npx m2m-ads register
+npx m2m-ads publish '<json>'
 
-# Library (project dependency)
+# Local project dependency
 npm install m2m-ads
+npx m2m-ads --help
+
+# Optional: global install
+npm install -g m2m-ads
 ```
 
 ## Config
 
-The CLI stores credentials in `~/.m2m-ads/config.json`:
+The CLI stores credentials in `~/.m2m-ads/config.json` (permissions `0600`):
 
 ```json
 {
   "baseUrl": "https://m2m-ads.com",
   "machine_id": "<uuid>",
-  "access_token": "<hex>"
+  "access_token": "<token>"
 }
 ```
 
-Override the config directory with the env var `M2M_ADS_HOME`.
+To remove local credentials:
+```bash
+m2m-ads logout
+# or manually: rm ~/.m2m-ads/config.json
+```
+
+---
+
+## Environment variables
+
+All env vars override the config file. Useful for CI/CD or stateless agents.
+
+| Variable | Description |
+|----------|-------------|
+| `M2M_ADS_HOME` | Config directory (default: `~/.m2m-ads`) |
+| `M2M_ADS_BASE_URL` | Server base URL |
+| `M2M_ADS_MACHINE_ID` | Machine ID |
+| `M2M_ADS_ACCESS_TOKEN` | Access token |
+
+**Precedence:** CLI args > ENV > config file > defaults.
+
+---
+
+## Security notes
+
+- The CLI performs network requests to the configured M2M server.
+- `access_token` is stored **in plaintext** in the config file; file is written with mode `0600`.
+- To revoke credentials: run `m2m-ads logout` or delete `~/.m2m-ads/config.json`.
+- For automated/CI use, prefer `M2M_ADS_ACCESS_TOKEN` env var (no file written to disk).
 
 ---
 

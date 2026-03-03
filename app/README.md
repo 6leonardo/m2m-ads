@@ -23,23 +23,34 @@ REST API server for the M2M classified exchange protocol. Built with Fastify, Ky
 
 ## Setup
 
-### 1. Start the database
+### Option A — Docker (full stack)
 
 ```bash
-cd db
+# start postgres + app together
 docker compose up -d
+
+# apply schema (first time only)
+docker compose exec postgres psql -U admin -d m2m_dev -f /docker-entrypoint-initdb.d/../schema.1.sql
 ```
 
-### 2. Apply the schema
+### Option B — Local dev
+
+**1. Start only the database:**
+
+```bash
+docker compose up postgres -d
+```
+
+**2. Apply the schema:**
 
 ```bash
 PGPASSWORD=secret psql -h localhost -U admin -d m2m_dev -f db/schema.1.sql
 ```
 
-### 3. Configure environment
+**3. Configure environment:**
 
 ```bash
-cp .env.example .env  # or edit .env directly
+cp .env.example .env  # edit as needed
 ```
 
 | Variable | Default | Description |

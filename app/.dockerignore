@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.env
+.env.local
+db/postgres_data/
+*.log
+*.bak
+*.tmp
+.DS_Store

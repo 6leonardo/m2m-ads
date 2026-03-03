@@ -10,6 +10,8 @@ read_when:
   - The user wants to configure webhooks for match notifications
   - The user wants to manage their m2m-ads config
 
+version: "0.1.0"
+
 requirements:
   - npm package "m2m-ads" must be installed globally: `npm install -g m2m-ads`
   - The M2M server must be reachable (default: https://m2m-ads.com)
@@ -224,3 +226,49 @@ const matches = await client.getMatches()
 | Server unreachable     | Verify `baseUrl` in config; default is `https://m2m-ads.com` |
 | Webhook not firing     | Check `PUT /v1/hooks` is set and URL is publicly reachable   |
 ```
+
+---
+
+## Publishing to ClawHub
+
+[ClawHub](https://clawhub.ai) is the public skill registry for OpenClaw.
+
+### First time setup
+
+```bash
+npm i -g clawhub
+
+# Browser login (opens clawhub.ai):
+clawhub login
+
+# Or with API token (get it from clawhub.ai → Settings → Tokens):
+clawhub login --token <your-token> --no-browser
+
+clawhub whoami   # verify
+```
+
+### Publish / update
+
+Use the helper script at the monorepo root (reads version from frontmatter automatically):
+
+```bash
+# from monorepo root
+./publish-skill.sh                     # publishes current version
+./publish-skill.sh "What changed"      # with changelog message
+```
+
+Or manually:
+
+```bash
+clawhub publish ./clients/openclaw/skills/m2m-ads \
+  --slug m2m-ads \
+  --name "M2M Classified Ads" \
+  --version 0.1.0 \
+  --tags latest \
+  --changelog "Initial release"
+```
+
+### Version bump workflow
+
+1. Edit the `version` field in this file's frontmatter (e.g. `0.1.0` → `0.1.1`)
+2. Run `./publish-skill.sh "changelog message"`

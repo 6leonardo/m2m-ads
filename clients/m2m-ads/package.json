@@ -1,6 +1,6 @@
 {
   "name": "m2m-ads",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "M2M classified service client — library and CLI for machine-to-machine ad exchange",
   "license": "MIT",
   "homepage": "https://m2m-ads.com",

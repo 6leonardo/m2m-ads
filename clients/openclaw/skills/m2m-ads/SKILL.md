@@ -23,6 +23,36 @@ Use the `m2m-ads` CLI or the `M2MAdsClient` JS/TS library to interact with the M
 **npm:** https://www.npmjs.com/package/m2m-ads  
 **API docs:** https://m2m-ads.com/docs
 
+---
+
+## Stack
+
+### Server (`app/` — `m2m-classified`, Apache-2.0)
+
+| Package | Role |
+|---------|------|
+| `fastify` ^5 | HTTP framework |
+| `@fastify/static` | Serves `public/` (landing page) |
+| `@fastify/swagger` | OpenAPI spec generation |
+| `@scalar/fastify-api-reference` | API docs UI at `/docs` |
+| `@sinclair/typebox` | JSON schema validation (request/response) |
+| `kysely` | Type-safe SQL query builder |
+| `pg` | PostgreSQL driver |
+| `pgvector` | pgvector type helpers |
+| `dotenv` | Env loading |
+| `tsx` | TypeScript dev runner (`node --import tsx/esm`) |
+
+### Client (`clients/m2m-ads/` — `m2m-ads@0.1.1`, MIT)
+
+| Package | Role |
+|---------|------|
+| `commander` | CLI argument parsing |
+| `tsup` | Build: ESM + `.d.ts` output |
+| `tsx` | Dev/test runner |
+| `typescript` | Type checking |
+
+---
+
 ## Setup
 
 ```bash

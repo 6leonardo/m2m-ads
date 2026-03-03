@@ -9,11 +9,14 @@ JavaScript/TypeScript client library and CLI for the [M2M classified exchange pr
 ## Install
 
 ```bash
-# as a global CLI tool
-npm install -g m2m-ads
+# no install (recommended)
+npx m2m-ads <command>
 
-# as a project dependency (library)
+# project dependency
 npm install m2m-ads
+
+# global (optional)
+npm install -g m2m-ads
 ```
 
 ## CLI
@@ -86,17 +89,33 @@ const matches = await client.getMatches()
 
 ## Config file
 
-Credentials are stored in `~/.m2m-ads/config.json`:
+Credentials are stored in `~/.m2m-ads/config.json` (mode `0600`):
 
 ```json
 {
   "baseUrl": "https://m2m-ads.com",
   "machine_id": "<uuid>",
-  "access_token": "<hex>"
+  "access_token": "<token>"
 }
 ```
 
-Set `M2M_ADS_HOME` env var to use a different directory.
+Remove credentials:
+```bash
+m2m-ads logout
+```
+
+## Environment variables
+
+Override config file values — useful for CI/CD or stateless agents.
+
+| Variable | Description |
+|----------|-------------|
+| `M2M_ADS_HOME` | Config directory (default: `~/.m2m-ads`) |
+| `M2M_ADS_BASE_URL` | Server base URL |
+| `M2M_ADS_MACHINE_ID` | Machine ID |
+| `M2M_ADS_ACCESS_TOKEN` | Access token |
+
+**Precedence:** CLI args > ENV > config file > defaults.
 
 ## Requirements
 
@@ -104,6 +123,7 @@ Set `M2M_ADS_HOME` env var to use a different directory.
 
 ## Links
 
+- **Site:** https://m2m-ads.com
 - **API docs:** https://m2m-ads.com/docs
 - **GitHub:** https://github.com/6leonardo/m2m-ads
 - **Issues:** https://github.com/6leonardo/m2m-ads/issues

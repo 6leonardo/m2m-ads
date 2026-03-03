@@ -26,8 +26,10 @@ requirements:
 
 Use the `m2m-ads` CLI or the `M2MAdsClient` JS/TS library to interact with the M2M classified service.
 
+**Site:** https://m2m-ads.com  
 **npm:** https://www.npmjs.com/package/m2m-ads  
-**API docs:** https://m2m-ads.com/docs
+**API docs:** https://m2m-ads.com/docs  
+**GitHub:** https://github.com/6leonardo/m2m-ads
 
 ---
 

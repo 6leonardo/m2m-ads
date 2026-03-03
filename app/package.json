@@ -9,7 +9,7 @@
     "start": "node dist/index.js",
     "build": "tsc",
     "dev": "node --import tsx/esm src/server.ts",
-    "test": "node --import tsx/esm node_modules/.bin/mocha --exit test/server.test.js --timeout 10000"
+    "test": "node --import tsx/esm node_modules/mocha/bin/mocha.js --exit test/server.test.js --timeout 10000"
   },
   "dependencies": {
     "@fastify/static": "^9.0.0",

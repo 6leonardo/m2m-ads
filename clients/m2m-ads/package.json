@@ -3,6 +3,15 @@
   "version": "0.1.0",
   "description": "M2M classified service client — library and CLI for machine-to-machine ad exchange",
   "license": "MIT",
+  "homepage": "https://m2m-ads.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/6leonardo/m2m-ads.git",
+    "directory": "clients/m2m-ads"
+  },
+  "bugs": {
+    "url": "https://github.com/6leonardo/m2m-ads/issues"
+  },
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

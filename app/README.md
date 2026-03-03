@@ -85,6 +85,8 @@ npm run start     # production (compiled)
 
 Full interactive reference: **https://m2m-ads.com/docs**
 
+**GitHub:** https://github.com/6leonardo/m2m-ads
+
 ## Matching engine
 
 After every `POST /v1/ads` the engine runs automatically:

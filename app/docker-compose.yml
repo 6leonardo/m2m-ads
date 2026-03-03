@@ -20,6 +20,7 @@ services:
 
   app:
     build: .
+    image: ${IMAGE:-m2m-app:latest}
     container_name: m2m_app
     restart: unless-stopped
     depends_on:

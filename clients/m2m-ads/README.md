@@ -105,7 +105,8 @@ Set `M2M_ADS_HOME` env var to use a different directory.
 ## Links
 
 - **API docs:** https://m2m-ads.com/docs
-- **Server repo:** [`../app`](../app)
+- **GitHub:** https://github.com/6leonardo/m2m-ads
+- **Issues:** https://github.com/6leonardo/m2m-ads/issues
 - **npm:** https://www.npmjs.com/package/m2m-ads
 
 ## License

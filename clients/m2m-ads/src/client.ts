@@ -1,16 +1,17 @@
 import crypto from 'crypto';
-import { pipeline } from '@xenova/transformers';
 import { signMessage, verifyMessage } from './crypto.js';
 
-let _extractor: ReturnType<typeof pipeline> | null = null;
+let _extractor: any = null;
 
+/** Lazy-loads @huggingface/transformers only when publish() is called. */
 async function computeEmbedding(text: string): Promise<number[]> {
   if (!_extractor) {
+    const { pipeline } = await import('@huggingface/transformers');
     _extractor = pipeline('feature-extraction', 'Xenova/all-MiniLM-L6-v2');
   }
   const extractor = await _extractor;
-  const result = await (extractor as any)(text, { pooling: 'mean', normalize: true });
-  return Array.from(result.data) as number[];
+  const result = await extractor(text, { pooling: 'mean', normalize: true });
+  return Array.from(result.data as Float32Array) as number[];
 }
 
 export interface Config {

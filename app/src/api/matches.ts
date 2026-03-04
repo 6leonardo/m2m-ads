@@ -73,8 +73,14 @@ export async function matchesRoutes(app: FastifyInstance) {
     const matches = rows.map((r) => {
       const mine = r.machine_id_1 === machine_id;
       const them = mine
-        ? { title: r.title_2, op: r.op_2, price: r.price_2 ?? null, currency: r.currency_2, description: r.description_2 }
-        : { title: r.title_1, op: r.op_1, price: r.price_1 ?? null, currency: r.currency_1, description: r.description_1 };
+        ? { title: r.title_2, op: r.op_2, price: r.price_2, currency: r.currency_2, description: r.description_2 }
+        : { title: r.title_1, op: r.op_1, price: r.price_1, currency: r.currency_1, description: r.description_1 };
+      
+      // Ensure price is either a number or null, not undefined
+      if (them.price === undefined) them.price = null;
+      // Convert price to number if it's a string (pg sometimes returns numeric as string)
+      if (them.price !== null) them.price = Number(them.price);
+
       return {
         match_id: r.match_id,
         ad_id: String(mine ? r.ad_id_1 : r.ad_id_2),

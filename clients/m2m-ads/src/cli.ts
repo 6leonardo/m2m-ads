@@ -8,7 +8,8 @@ import { setHook } from './commands/set-hook.js';
 import { listMatches } from './commands/matches.js';
 import { listMessages, sendMessage } from './commands/messages.js';
 import { M2MClient } from './client.js';
-import { loadConfig } from './config.js';
+import { loadConfig, getConfigPath } from './config.js';
+import fs from 'fs/promises';
 
 program
   .command('register')
@@ -62,5 +63,37 @@ program
   .command('send <match_id> <payload>')
   .description('Send a message to a match counterpart')
   .action(sendMessage);
+
+program
+  .command('backup-id <destination>')
+  .description('Backup identity (config.json) to a file')
+  .action(async (destination: string) => {
+    const src = getConfigPath();
+    try {
+      await fs.copyFile(src, destination);
+      await fs.chmod(destination, 0o600);
+      console.log(`Identity backed up to ${destination}`);
+    } catch {
+      console.error(`Error: could not read ${src} — have you registered?`);
+      process.exit(1);
+    }
+  });
+
+program
+  .command('restore-id <source>')
+  .description('Restore identity from a backup file')
+  .action(async (source: string) => {
+    const dest = getConfigPath();
+    try {
+      await fs.access(source);
+    } catch {
+      console.error(`Error: file not found: ${source}`);
+      process.exit(1);
+    }
+    await fs.mkdir(dest.replace(/\/[^\/]+$/, ''), { recursive: true });
+    await fs.copyFile(source, dest);
+    await fs.chmod(dest, 0o600);
+    console.log(`Identity restored to ${dest}`);
+  });
 
 program.parse();

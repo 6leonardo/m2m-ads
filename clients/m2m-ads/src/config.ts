@@ -48,3 +48,7 @@ export async function deleteConfig() {
     // already gone
   }
 }
+
+export function getConfigPath(): string {
+  return path.join(getBase(), 'config.json');
+}

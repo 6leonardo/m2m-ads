@@ -1,5 +1,6 @@
 import { buildApp } from './app.js';
 import { CONFIG } from './config.js';
+import { db } from './db.js';
 import process from 'node:process';
 
 const start = async () => {
@@ -15,6 +16,7 @@ const start = async () => {
       console.log(`Received ${signal}. Closing server...`);
       try {
         await app.close();
+        await db.destroy();
         console.log('Server closed successfully.');
         process.exit(0);
       } catch (err) {

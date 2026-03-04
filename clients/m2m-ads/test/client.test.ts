@@ -14,8 +14,7 @@ const sampleAd = {
   op: 'sell' as const,
   title: 'Test widget',
   description: 'A test ad from the client test suite',
-  coord: { lat: 41.9028, lon: 12.4964 },
-  embedding: Array(384).fill(0.1) as number[]
+  coord: { lat: 41.9028, lon: 12.4964 }
 };
 
 // ── M2MClient.register() ────────────────────────────────────────────
@@ -107,10 +106,11 @@ describe('saveConfig / loadConfig', () => {
     }
   });
 
-  it('should throw when config file does not exist', async () => {
+  it('should return defaults when config file does not exist', async () => {
     process.env.M2M_ADS_HOME = join(tmpdir(), `m2m-missing-${Date.now()}`);
     try {
-      await assert.rejects(() => loadConfig());
+      const loaded = await loadConfig();
+      assert.equal(loaded.baseUrl, 'https://m2m-ads.com');
     } finally {
       delete process.env.M2M_ADS_HOME;
     }

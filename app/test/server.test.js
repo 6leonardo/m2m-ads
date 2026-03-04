@@ -136,7 +136,7 @@ describe('PUT /v1/hooks', () => {
     const res = await fetch(`${base}/v1/hooks`, {
       method: 'PUT',
       headers: { 'content-type': 'application/json', authorization: `Bearer ${accessToken}` },
-      body: JSON.stringify({ match_webhook_url: null, message_webhook_url: null })
+      body: JSON.stringify({ webhook_url: null, webhook_secret: null })
     });
     assert.equal(res.status, 204);
   });
@@ -311,8 +311,8 @@ describe('Matching engine', () => {
 
     const match = matches[0];
     assert.ok(match.match_id);
-    assert.ok(match.your_ad_id);
-    assert.ok(match.their_ad_id);
+    assert.ok(match.ad_id);
+    assert.ok(match.match);
     assert.ok(typeof match.score === 'number' && match.score >= 0.3);
   });
 });

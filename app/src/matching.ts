@@ -149,26 +149,28 @@ export async function runMatching(newAdId: string): Promise<void> {
   if (machineIdToMatches.size === 0) return;
 
   const machines = await db.selectFrom('machines')
-    .select(['machine_id', 'match_webhook_url'])
+    .select(['machine_id', 'webhook_url', 'webhook_secret'])
     .where('machine_id', 'in', [...machineIdToMatches.keys()])
     .execute();
 
   for (const machine of machines) {
-    if (!machine.match_webhook_url) continue;
+    if (!machine.webhook_url) continue;
     const matchIds = machineIdToMatches.get(machine.machine_id) ?? [];
     for (const matchId of matchIds) {
-      fireWebhook(machine.match_webhook_url, { event: 'match', match_id: matchId }).catch(() => {});
+      fireWebhook(machine.webhook_url, { event: 'match', match_id: matchId }, machine.webhook_secret ?? undefined).catch(() => {});
     }
   }
 }
 
-async function fireWebhook(url: string, body: unknown): Promise<void> {
+async function fireWebhook(url: string, body: unknown, secret?: string): Promise<void> {
   const ac = new AbortController();
   const timer = setTimeout(() => ac.abort(), 5_000);
+  const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+  if (secret) headers['X-Webhook-Secret'] = secret;
   try {
     await fetch(url, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers,
       body: JSON.stringify(body),
       signal: ac.signal
     });

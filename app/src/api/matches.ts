@@ -18,11 +18,16 @@ export async function matchesRoutes(app: FastifyInstance) {
         200: Type.Object({
           matches: Type.Array(Type.Object({
             match_id: Type.String(),
-            your_ad_id: Type.String(),
-            their_ad_id: Type.String(),
-            their_machine_id: Type.String(),
+            ad_id: Type.String(),
             score: Type.Number(),
-            matched_at: Type.String({ format: 'date-time' })
+            matched_at: Type.String({ format: 'date-time' }),
+            match: Type.Object({
+              title: Type.String(),
+              op: Type.String(),
+              price: Type.Union([Type.Number(), Type.Null()]),
+              currency: Type.String(),
+              description: Type.String()
+            })
           }))
         }),
         401: Type.Object({ error: Type.String() })
@@ -44,6 +49,16 @@ export async function matchesRoutes(app: FastifyInstance) {
         'a1.machine_id as machine_id_1',
         'a2.id as ad_id_2',
         'a2.machine_id as machine_id_2',
+        'a2.title as title_2',
+        'a2.op as op_2',
+        'a2.price as price_2',
+        'a2.currency as currency_2',
+        'a2.description as description_2',
+        'a1.title as title_1',
+        'a1.op as op_1',
+        'a1.price as price_1',
+        'a1.currency as currency_1',
+        'a1.description as description_1',
         'm.score',
         'm.created_at as matched_at'
       ])
@@ -57,13 +72,15 @@ export async function matchesRoutes(app: FastifyInstance) {
 
     const matches = rows.map((r) => {
       const mine = r.machine_id_1 === machine_id;
+      const them = mine
+        ? { title: r.title_2, op: r.op_2, price: r.price_2 ?? null, currency: r.currency_2, description: r.description_2 }
+        : { title: r.title_1, op: r.op_1, price: r.price_1 ?? null, currency: r.currency_1, description: r.description_1 };
       return {
         match_id: r.match_id,
-        your_ad_id: String(mine ? r.ad_id_1 : r.ad_id_2),
-        their_ad_id: String(mine ? r.ad_id_2 : r.ad_id_1),
-        their_machine_id: mine ? r.machine_id_2 : r.machine_id_1,
+        ad_id: String(mine ? r.ad_id_1 : r.ad_id_2),
         score: r.score,
-        matched_at: new Date(String(r.matched_at)).toISOString()
+        matched_at: new Date(String(r.matched_at)).toISOString(),
+        match: them
       };
     });
 

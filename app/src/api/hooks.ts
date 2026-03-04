@@ -15,8 +15,8 @@ export async function hooksRoutes(app: FastifyInstance) {
   app.put('/v1/hooks', {
     schema: {
       body: Type.Object({
-        match_webhook_url: Type.Union([Type.String({ format: 'uri' }), Type.Null()]),
-        message_webhook_url: Type.Union([Type.String({ format: 'uri' }), Type.Null()])
+        webhook_url: Type.Union([Type.String({ format: 'uri' }), Type.Null()]),
+        webhook_secret: Type.Optional(Type.Union([Type.String(), Type.Null()]))
       }),
       response: {
         204: Type.Null(),
@@ -28,14 +28,13 @@ export async function hooksRoutes(app: FastifyInstance) {
     const machine_id = await getMachineId(token);
     if (!machine_id) return reply.status(401).send({ error: 'Unauthorized' });
 
-    const { match_webhook_url, message_webhook_url } = request.body as {
-      match_webhook_url: string | null;
-      message_webhook_url: string | null;
-    };
+    const { webhook_url, webhook_secret } = request.body as { webhook_url: string | null; webhook_secret?: string | null };
 
-    // Update hooks in the database
+    // Update hook in the database
+    const update: Record<string, unknown> = { webhook_url };
+    if (webhook_secret !== undefined) update.webhook_secret = webhook_secret;
     await db.updateTable('machines')
-      .set({ match_webhook_url, message_webhook_url })
+      .set(update as any)
       .where('machine_id', '=', machine_id)
       .execute();
 
@@ -46,8 +45,8 @@ export async function hooksRoutes(app: FastifyInstance) {
     schema: {
       response: {
         200: Type.Object({
-          match_webhook_url: Type.Union([Type.String({ format: 'uri' }), Type.Null()]),
-          message_webhook_url: Type.Union([Type.String({ format: 'uri' }), Type.Null()])
+          webhook_url: Type.Union([Type.String({ format: 'uri' }), Type.Null()]),
+          webhook_secret: Type.Union([Type.String(), Type.Null()])
         }),
         401: Type.Object({ error: Type.String() })
       }
@@ -58,10 +57,10 @@ export async function hooksRoutes(app: FastifyInstance) {
     if (!machine_id) return reply.status(401).send({ error: 'Unauthorized' });
 
     const hooks = await db.selectFrom('machines')
-      .select(['match_webhook_url', 'message_webhook_url'])
+      .select(['webhook_url', 'webhook_secret'])
       .where('machine_id', '=', machine_id)
       .executeTakeFirst();
 
-    return hooks || { match_webhook_url: null, message_webhook_url: null };
+    return hooks || { webhook_url: null, webhook_secret: null };
   });
 }

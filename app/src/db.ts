@@ -16,8 +16,8 @@ export interface Database {
     public_sign_key: string;
     access_token: string;
     country: string | null;
-    match_webhook_url: string | null;
-    message_webhook_url: string | null;
+    webhook_url: string | null;
+    webhook_secret: string | null;
     created_at: string;
   };
   challenges: {

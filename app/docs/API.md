@@ -13,7 +13,7 @@ No auth. Returns a PoW challenge.
 
 **Response 200**
 ```json
-{ "challenge": "<base64>", "difficulty": 22, "expires_at": "2026-01-01T00:00:00.000Z" }
+{ "id": "<uuid>", "challenge": "<base64>", "difficulty": 22, "expires_at": "2026-01-01T00:00:00.000Z" }
 ```
 
 ---
@@ -24,7 +24,7 @@ Submit PoW solution. Challenge is marked used immediately.
 
 **Body**
 ```json
-{ "challenge": "<base64>", "nonce": 12345678, "public_sign_key": "<string>", "country": "IT" }
+{ "id": "<uuid>", "nonce": 12345678, "public_sign_key": "<string>", "country": "IT" }
 ```
 `country` is optional (ISO 3166-1 alpha-2).
 
@@ -124,15 +124,56 @@ Returns all matches involving the caller's ads.
 **Response 200**
 ```json
 [{
-  "id": "<uuid>",
-  "ad_id_1": "<uuid>",
-  "ad_id_2": "<uuid>",
+  "match_id": "<uuid>",
+  "ad_id": "<uuid>",
   "score": 0.87,
-  "created_at": "..."
+  "matched_at": "...",
+  "match": {
+    "title": "Used mountain bike",
+    "op": "sell",
+    "price": 750,
+    "currency": "EUR",
+    "description": "Trek, 2021, good condition"
+  }
 }]
 ```
 
-`ad_id_1 < ad_id_2` always (canonical order).
+`ad_id` is your ad that generated the match. `match` contains the counterpart ad details.
+
+---
+
+## Messages
+
+### `POST /v1/messages/:match_id`
+
+Send a message to the counterpart in a match. Fires a webhook to the counterpart if configured.
+
+**Body** `{ "payload": "text here" }`
+
+**Response 201** `{ "message_id": "<uuid>" }`
+
+**Errors:** `403` not a participant, `404` match not found
+
+---
+
+### `GET /v1/messages/:match_id`
+
+List all messages for a match. Marks counterpart's unread messages as read.
+
+**Response 200**
+```json
+{
+  "messages": [{
+    "message_id": "<uuid>",
+    "sender_machine_id": "<uuid>",
+    "payload": "text here",
+    "created_at": "...",
+    "read_at": null
+  }]
+}
+```
+
+**Errors:** `403` not a participant, `404` match not found
 
 ---
 
@@ -144,7 +185,7 @@ Returns current webhook configuration for the caller.
 
 **Response 200**
 ```json
-{ "match_webhook_url": "https://...", "message_webhook_url": "https://..." }
+{ "webhook_url": "https://...", "webhook_secret": "mytoken" }
 ```
 Both fields may be `null`.
 
@@ -152,24 +193,30 @@ Both fields may be `null`.
 
 ### `PUT /v1/hooks`
 
-Set webhook URLs. Pass `null` to clear.
+Set webhook URL and optional secret. Pass `null` to clear.
 
 **Body**
 ```json
-{ "match_webhook_url": "https://...", "message_webhook_url": null }
+{ "webhook_url": "https://...", "webhook_secret": "mytoken" }
 ```
+`webhook_secret` is optional. When set, sent as `X-Webhook-Secret` header on every POST.
 
 **Response 200** — updated config
 
 ---
 
-## Webhook payload
+## Webhook payloads
 
-When a match is found the server fires a POST to each machine's `match_webhook_url`:
+The server POSTs to `webhook_url` for two event types. Fire-and-forget, 5s timeout, no retry.
 
+**match event** — fired when a compatible counterpart ad is found:
 ```json
 { "event": "match", "match_id": "<uuid>" }
 ```
 
-- Fire-and-forget, 5s timeout, errors silently ignored
-- No data about the other machine is included
+**message event** — fired when the counterpart sends a message:
+```json
+{ "event": "message", "match_id": "<uuid>", "message_id": "<uuid>" }
+```
+
+If `webhook_secret` is set, the header `X-Webhook-Secret: <secret>` is included on every request.

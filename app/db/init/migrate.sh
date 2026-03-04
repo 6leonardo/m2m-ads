@@ -42,5 +42,5 @@ apply_if_missing() {
 
 # ── Versions — add new lines here as schema files grow ───────────────────────
 apply_if_missing "1.0.0"
-# apply_if_missing "1.1.0"
+apply_if_missing "1.1.0"
 # apply_if_missing "2.0.0"

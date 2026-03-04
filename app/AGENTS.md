@@ -82,8 +82,15 @@ Entrypoint: `src/server.ts` — do NOT use `src/index.ts` (Express legacy, ignor
   cd db && docker compose down && sudo rm -rf postgres_data init
   docker compose up -d && ./create-db.sh
   ```
-- **After go-live**: add `db/schema.2.sql`, `schema.3.sql`, etc. with idempotent DO blocks
+- **After go-live**: add migration files `db/init/schemas/<version>.sql` and activate them in `db/init/migrate.sh`
 - Details: `docs/SCHEMA.md`
+
+### Migration rules (MANDATORY)
+- **Migrations must never be destructive.** `DROP COLUMN` and `DROP TABLE` are forbidden in production migrations.
+- If a column must be removed, the migration must first copy its data to the new structure, then add a deprecation comment — removal is a separate future version.
+- Every migration must be self-contained and idempotent where possible.
+- Example of a safe rename: `ADD COLUMN new_col; UPDATE ... SET new_col = old_col; -- DROP old_col in vX.Y.Z`
+- The v1.1.0 migration (`DROP COLUMN match_webhook_url, message_webhook_url`) was acceptable **only** because it happened before go-live with no production data.
 
 ---
 

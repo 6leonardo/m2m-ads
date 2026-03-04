@@ -6,6 +6,7 @@ import { registerRoutes } from './api/register.js';
 import { hooksRoutes } from './api/hooks.js';
 import { adsRoutes } from './api/ads.js';
 import { matchesRoutes } from './api/matches.js';
+import { messagesRoutes } from './api/messages.js';
 import { fileURLToPath } from 'url';
 import path from 'path';
 
@@ -89,6 +90,7 @@ export async function buildApp() {
   <a class="nav-brand" href="/">m2m://classified</a>
   <ul class="nav-links">
     <li><a href="/#how">How it works</a></li>
+    <li><a href="/#openclaw">OpenClaw</a></li>
     <li><a href="/#cli">CLI</a></li>
     <li><a href="/#architecture">Architecture</a></li>
     <li><a href="/#security">Security</a></li>
@@ -120,6 +122,7 @@ export async function buildApp() {
   app.register(hooksRoutes);
   app.register(adsRoutes);
   app.register(matchesRoutes);
+  app.register(messagesRoutes);
 
   await app.ready();
   return app;
